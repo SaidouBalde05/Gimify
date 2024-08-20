@@ -1,0 +1,114 @@
+<div class="max-w-4xl mx-auto p-6 bg-white border border-gray-200 rounded-lg shadow-lg mt-10">
+  <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Publier une Nouvelle Musique</h2>
+
+  <form (ngSubmit)="onSubmit()" class="space-y-6">
+    <div>
+      <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Titre de l'Album:</label>
+      <input
+        type="text"
+        id="title"
+        [(ngModel)]="newMusic.title"
+        name="title"
+        required
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+    <div>
+      <label for="artist" class="block text-sm font-medium text-gray-700 mb-1">Artiste:</label>
+      <input
+        type="text"
+        id="artist"
+        [(ngModel)]="newMusic.artist"
+        name="artist"
+        required
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+    <div>
+      <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description:</label>
+      <textarea
+        id="description"
+        [(ngModel)]="newMusic.description"
+        name="description"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      ></textarea>
+    </div>
+
+    <div>
+      <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image de couverture:</label>
+      <input
+        type="file"
+        (change)="onFileSelected($event, 'image')"
+        accept="image/*"
+        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+      />
+    </div>
+
+    <div>
+      <label for="audio" class="block text-sm font-medium text-gray-700 mb-1">Fichiers audio:</label>
+      <input
+        type="file"
+        (change)="onFileSelected($event, 'audio')"
+        accept="audio/*"
+        multiple
+        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+      />
+    </div>
+
+    <div *ngFor="let file of newMusic.audioFiles; let i = index">
+      <div class="mb-4">
+        <label for="audioName{{ i }}" class="block text-sm font-medium text-gray-700 mb-1">Nom du fichier {{ i + 1 }}:</label>
+        <input
+          type="text"
+          [(ngModel)]="file.name"
+          (ngModelChange)="onAudioNameChange(i, $event)"
+          name="audioName{{ i }}"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <p class="text-gray-500 text-sm">(Nom original: {{ file.name }})</p>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      Publier
+    </button>
+  </form>
+</div>
+
+
+
+
+
+<!-- <div>
+  <h2>Publier une nouvelle musique</h2>
+  <form (ngSubmit)="onSubmit()">
+    <label for="title">Titre de la musique:</label>
+    <input type="text" id="title" [(ngModel)]="newMusic.title" name="title" required />
+
+    <label for="artist">Artiste:</label>
+    <input type="text" id="artist" [(ngModel)]="newMusic.artist" name="artist" required />
+
+    <label for="description">Description:</label>
+    <textarea id="description" [(ngModel)]="newMusic.description" name="description"></textarea>
+
+    <label for="image">Image de couverture:</label>
+    <input type="file" (change)="onFileSelected($event, 'image')" accept="image/*" />
+
+    <label for="audio">Fichiers audio:</label>
+    <input type="file" (change)="onFileSelected($event, 'audio')" accept="audio/*" multiple />
+
+    <div *ngFor="let file of newMusic.audioFiles; let i = index">
+      <label for="audioName">Nom du fichier {{ i + 1 }}:</label>
+      <input type="text" [(ngModel)]="file.name" (ngModelChange)="onAudioNameChange(i, $event)" name="audioName{{ i }}" />
+      <p>(Nom original: {{ file.name }})</p>
+    </div>
+
+    <button type="submit">Publier</button>
+  </form>
+</div>
+ -->

@@ -1,0 +1,104 @@
+<div class="admin-dashboard p-4">
+  <h2 class="text-2xl font-bold mb-6">Tableau de Bord Administrateur</h2>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    
+    <!-- Section Utilisateurs -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-xl font-semibold mb-4">Nombre total d'utilisateurs : {{ totalUsers }}</h3>
+      <div *ngIf="users.length > 0">
+        <ul class="list-none">
+          <li *ngFor="let user of users" class="mb-4 flex items-center justify-between p-4 border border-gray-300 rounded-lg">
+            <div>
+              <p class="font-semibold">{{ user.username }}</p>
+              <p class="text-gray-600">{{ user.role }}</p>
+            </div>
+            <button
+              (click)="deleteUser(user.id)"
+              class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+            >
+              Supprimer
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="users.length === 0" class="text-gray-500">Aucun utilisateur trouvé.</div>
+    </div>
+
+    <!-- Section Ventes -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-xl font-semibold mb-4">Toutes les publications</h3>
+      <div *ngIf="musicSales.length > 0">
+        <table class="w-full table-auto">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 text-left">Titre</th>
+              <th class="px-4 py-2 text-left">Artiste</th>
+              <th class="px-4 py-2 text-left">Description</th>
+              <th class="px-4 py-2 text-left">Ventes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of musicSales" class="text-gray-700">
+              <td class="border px-4 py-2">{{ item.music.title }}</td>
+              <td class="border px-4 py-2">{{ item.music.artist }}</td>
+              <td class="border px-4 py-2">{{ item.music.description }}</td>
+              <td class="border px-4 py-2">{{ item.sales }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="musicSales.length === 0" class="text-gray-500">Aucun album publié.</div>
+    </div>
+  
+  </div>
+</div>
+
+
+<!-- <div class="admin-dashboard p-4">
+  <h2 class="text-2xl font-bold mb-6">Tableau de Bord Administrateur</h2>
+
+  <div class="mb-4">
+    <h3 class="text-xl font-semibold">Nombre total d'utilisateurs : {{ totalUsers }}</h3>
+    <div *ngIf="users.length > 0" >
+      <ul class="list-disc pl-5">
+        <li *ngFor="let user of users" class="mb-4 flex items-center justify-between p-4 border border-gray-300 rounded-lg">
+          <div>
+            <p class="font-semibold">{{ user.username }}</p>
+            <p class="text-gray-600">{{ user.role }}</p>
+          </div>
+          <button
+            (click)="deleteUser(user.id)"
+            class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            Supprimer
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div *ngIf="musicSales.length === 0" class="text-center text-gray-500">Aucun album publié.</div>
+  <div class="admin-dashboard p-4">
+    <h2 class="text-2xl font-bold mb-4">Tableau de bord de l'administrateur</h2>
+  
+    <h3 class="text-xl font-semibold mb-2">Toutes les publications</h3>
+    <table class="w-full table-auto mb-6">
+      <thead>
+        <tr>
+          <th class="px-4 py-2">Titre</th>
+          <th class="px-4 py-2">Artiste</th>
+          <th class="px-4 py-2">Description</th>
+          <th class="px-4 py-2">Ventes</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let item of musicSales">
+        <tr class="text-white">
+          <td class="border px-4 py-2">{{ item.music.title }}</td>
+          <td class="border px-4 py-2">{{ item.music.artist }}</td>
+          <td class="border px-4 py-2">{{ item.music.description }}</td>
+          <td class="px-4 py-2">{{ item.sales }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div> -->

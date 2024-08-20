@@ -1,0 +1,33 @@
+<div class="container mx-auto p-4">
+  <h1 class="text-3xl font-bold text-center mb-6">User Dashboard </h1>
+  <div *ngIf="userPublications.length > 0; else noAlbums">
+    <ul class="album-list">
+      <li *ngFor="let music of userPublications" class="album-item">
+        <img [src]="music.imageUrl" alt="{{ music.title }}" />
+        <h3>{{ music.title }}</h3>
+        <p>{{ music.artist }}</p>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noAlbums>
+    <p>Vous n'avez pas encore acheté d'albums.</p>
+  </ng-template>
+  
+  
+
+  <!-- <div class="mb-4 p-4 bg-white shadow-lg rounded-lg">
+    <h2 class="text-xl font-semibold mb-2">Vos Albums Achetes</h2>
+    <div *ngIf="userPublications.length > 0; else noAlbums">
+      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <li *ngFor="let music of userPublications" class="bg-gray-100 p-4 rounded-lg shadow-md">
+          <img [src]="music.imageUrl" alt="{{ music.title }}" class="rounded-lg mb-2">
+          <h3 class="text-lg font-semibold">{{ music.title }}</h3>
+          <p class="text-gray-600">{{ music.artist }}</p>
+        </li>
+      </ul>
+    </div>
+    <ng-template #noAlbums>
+      <p class="text-gray-500">Vous n'avez pas encore acheté d'albums.</p>
+    </ng-template>
+  </div> -->
+</div>

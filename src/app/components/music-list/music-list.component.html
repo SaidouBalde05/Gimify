@@ -1,0 +1,83 @@
+<div *ngFor="let music of musics" class="music-item border rounded-lg p-4 mb-4 shadow-lg text-white">
+  <h3 class="text-lg font-bold mb-2">{{ music.title }}</h3>
+  <p class="text-white">{{ music.artist }}</p>
+
+    <img
+    [id]="'image-' + music.id"
+    [src]="music.imageUrl"
+    [ngClass]="isImageExpanded(music.id) ? 'w-48 h-48' : 'w-32 h-32'"
+    (click)="toggleImageSize(music.id)"
+    alt="Cover{{music.title}}"
+    class="rounded-lg shadow-md cursor-pointer transition-transform duration-300"
+  />
+
+  <button 
+  (click)="toggleMusicList(music.id)" 
+  class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+  {{ isMusicListVisible(music.id) ? 'Cacher les musiques' : 'Afficher les musiques' }}
+</button>
+
+<!-- Liste des musiques de l'album -->
+<ul *ngIf="isMusicListVisible(music.id)" class="mt-2">
+  <li *ngFor="let audio of music.audioFiles" class="text-black">
+    {{ audio }}
+  </li>
+</ul>
+
+  <!-- Bouton pour acheter -->
+  <!-- <button (click)="onBuyMusic(music.id, music.title)" class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600">
+    Acheter
+  </button> -->
+
+  <button *ngIf="!canListen(music.id)" (click)="onBuyMusic(music.id, music.title)" class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600">
+    Acheter
+  </button>
+
+    <!-- Formulaire de paiement -->
+    <!-- <div *ngIf="showPaymentForm && selectedMusicId === music.id">
+      <form (ngSubmit)="onConfirmPurchase(music.id, music.title)">
+        <label for="cardNumber">Numéro de carte :</label>
+        <input type="text" id="cardNumber" name="cardNumber" required>
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600">Payer</button>
+      </form>
+    </div> -->
+
+    <!-- Bouton Écouter -->
+    <!-- <button *ngIf="canListen(music.id)" (click)="onListenMusic()">Écouter</button> -->
+  
+  
+  <!-- <button (click)="onBuy(music.id)" class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600">
+    Acheter
+  </button> -->
+
+  <!-- Formulaire de paiement -->
+  <div  *ngIf="showPaymentForm && selectedMusicId === music.id" class="mt-4 p-4 border rounded-lg bg-white shadow-lg text-gray-800">
+    <h4 class="text-lg font-bold mb-2">Formulaire de paiement</h4>
+    <form (ngSubmit)="onConfirmPurchase(music.id, music.title)">
+      <div class="mb-4">
+        <label for="cardNumber" class="block text-sm font-medium mb-1">Numéro de carte :</label>
+        <input type="text" id="cardNumber" [(ngModel)]="cardNumber" name="cardNumber" required
+               class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+
+      <div class="mb-4">
+        <label for="expiryDate" class="block text-sm font-medium mb-1">Date d'expiration :</label>
+        <input type="text" id="expiryDate" [(ngModel)]="expiryDate" name="expiryDate" required
+               class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+
+      <div class="mb-4">
+        <label for="cvv" class="block text-sm font-medium mb-1">CVV :</label>
+        <input type="text" id="cvv" [(ngModel)]="cvv" name="cvv" required
+               class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Payer</button>
+    </form>
+  </div>
+
+  <!-- Bouton pour écouter (n'apparaît que si l'album est acheté) -->
+  <button *ngIf="canListen(music.id)" (click)="onListenMusic()" class="bg-yellow-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-yellow-600">
+    Écouter
+  </button>
+</div>
