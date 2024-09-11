@@ -1,0 +1,24 @@
+<form (ngSubmit)="onSubmit(contactForm)" #contactForm="ngForm" class="bg-gray-700 space-y-4">
+  <h1 style="text-align: center;"> {{texte | uppercase}}</h1>
+  <div>
+    <label for="name" class="block text-sm font-medium">Nom et Prénom</label>
+    <input id="name" name="name" type="text" [(ngModel)]="name" required
+      class="text-gray-600 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50" />
+  </div>
+  
+  <div>
+    <label for="email" class="block text-sm font-medium">Email</label>
+    <input id="email" name="email" type="email" [(ngModel)]="email" required
+           class="text-gray-600 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50" />
+  </div>
+  
+  <div>
+    <label for="message" class="block text-sm font-medium">Message</label>
+    <textarea id="message" name="message" rows="4" [(ngModel)]="message" required
+              class="text-gray-600 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50"></textarea>
+  </div>
+  
+  <button type="submit" [disabled]="contactForm.invalid" class="bg-blue-500 text-white px-4 py-2 rounded">
+    Envoyer
+  </button>
+</form>

@@ -1,33 +1,147 @@
-<div class="container mx-auto p-4">
-  <h1 class="text-3xl font-bold text-center mb-6">User Dashboard </h1>
-  <div *ngIf="userPublications.length > 0; else noAlbums">
-    <ul class="album-list">
-      <li *ngFor="let music of userPublications" class="album-item">
-        <img [src]="music.imageUrl" alt="{{ music.title }}" />
-        <h3>{{ music.title }}</h3>
-        <p>{{ music.artist }}</p>
-      </li>
-    </ul>
+<div *ngIf="currentUser">
+  <div class="flex items-center mb-4">
+    <i 
+      class="fas fa-cogs text-gray-600 text-2xl cursor-pointer transition-transform duration-300"
+      (click)="toggleUserInfo()"
+      [ngClass]="{'rotate-180': showUserInfo}"
+    ></i>
   </div>
-  <ng-template #noAlbums>
-    <p>Vous n'avez pas encore acheté d'albums.</p>
-  </ng-template>
-  
-  
 
-  <!-- <div class="mb-4 p-4 bg-white shadow-lg rounded-lg">
-    <h2 class="text-xl font-semibold mb-2">Vos Albums Achetes</h2>
-    <div *ngIf="userPublications.length > 0; else noAlbums">
-      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        <li *ngFor="let music of userPublications" class="bg-gray-100 p-4 rounded-lg shadow-md">
-          <img [src]="music.imageUrl" alt="{{ music.title }}" class="rounded-lg mb-2">
-          <h3 class="text-lg font-semibold">{{ music.title }}</h3>
-          <p class="text-gray-600">{{ music.artist }}</p>
+  <!-- Informations sur l'utilisateur avec animation -->
+  <div [ngClass]="{'hidden': !showUserInfo, 'fade-in': showUserInfo}" class="transition-all duration-500">
+    <button 
+      *ngIf="authService.isLoggedIn()" 
+      (click)="logout()"
+      class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+    >
+      Déconnexion
+    </button>
+
+    <p class="flex items-center">
+      <i class="fas fa-envelope text-gray-600 mr-2"></i>
+      Adresse email : <strong>{{ currentUser.username }}</strong>
+    </p>
+    <p class="flex items-center">
+      <i class="fas fa-user text-gray-600 mr-2"></i>
+      Prénom : <strong>{{ currentUser.firstName }}</strong>
+    </p>
+    <p class="flex items-center">
+      <i class="fas fa-user text-gray-600 mr-2"></i>
+      Nom : <strong>{{ currentUser.lastName }}</strong>
+    </p>
+  </div>
+
+  <h2 class="text-2xl font-bold mb-4 flex items-center">
+    <i class="fas fa-user-tie text-blue-500 mr-2"></i>
+    Bienvenue, {{ currentUser.firstName }} {{ currentUser.lastName }}
+  </h2>
+  <!-- Template -->
+<div *ngIf="currentUser" class="shadow-md rounded-lg p-6">
+   <h2 class="text-2xl font-bold mb-4">Historique de vos Achats</h2>
+  <div *ngIf="purchases.length > 0; else noPurchases">
+    <ul class="space-y-4">
+      <li *ngFor="let purchase of purchases" class="flex justify-between items-center p-4 bg-gray-50 rounded-md shadow-sm">
+        <div>
+          <p class="text-lg font-semibold text-gray-700">{{ purchase.title }}</p>
+          <p class="text-sm text-gray-500">{{ purchase.artist }}</p>
+        </div>
+        <div>
+          <button 
+            (click)="deletePurchase(purchase.id)"
+            class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded shadow transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+          >
+            Supprimer
+          </button>
+        </div>
+      </li>
+    </ul> 
+  </div>
+
+  <ng-template #noPurchases>
+    <p class="text-center text-2xl mt-4">Vous n'avez pas effectué d'achat.</p>
+  </ng-template>
+</div>
+
+
+
+<div *ngIf="!currentUser" class="flex items-center justify-center">
+  <i class="fas fa-user text-gray-500 text-3xl"></i>
+  <i class="fas fa-comment-dots text-gray-500 text-3xl"></i>
+  <p class="ml-2 text-xl">Connectez-vous pour accéder à cette fonctionnalité</p>
+</div>
+
+
+
+
+<!-- <div *ngIf="currentUser">
+  <div class="flex items-center mb-4">
+    <i 
+      class="fas fa-cogs text-gray-600 text-2xl cursor-pointer transition-transform duration-300"
+      (click)="toggleUserInfo()"
+      [ngClass]="{'rotate-180': showUserInfo}"
+    ></i>
+  </div>
+
+  <!-- Informations sur l'utilisateur avec animation --
+  <div [ngClass]="{'hidden': !showUserInfo, 'fade-in': showUserInfo}" class="transition-all duration-500">
+    <button 
+      *ngIf="authService.isLoggedIn()" 
+      (click)="logout()"
+      class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+    >
+      Déconnexion
+    </button>
+
+    <p class="flex items-center">
+      <i class="fas fa-envelope text-gray-600 mr-2"></i>
+      Adresse email : <strong>{{ currentUser.username }}</strong>
+    </p>
+    <p class="flex items-center">
+      <i class="fas fa-key text-gray-600 mr-2"></i>
+      Prenom : <strong>{{ currentUser.firstName }}</strong>
+    </p>
+    <p class="flex items-center">
+      <i class="fas fa-key text-gray-600 mr-2"></i>
+      Nom : <strong>{{ currentUser.lastName }}</strong>
+    </p>
+  </div>
+    <h2 class="text-2xl font-bold mb-4 flex items-center">
+      <i class="fas fa-user-tie text-blue-500 mr-2"></i>
+      Bienvenue,  {{ currentUser.firstName }} {{ currentUser.lastName }}
+  </h2>
+
+  <div *ngIf="currentUser" class="shadow-md rounded-lg p-6">
+    <h2 class="text-2xl font-bold mb-4 ">Historique de vos Achats</h2>
+    
+    <div *ngIf="purchases.length > 0; else noPurchases">
+      <ul class="space-y-4">
+        <li *ngFor="let purchase of purchases" class="flex justify-between items-center p-4 bg-gray-50 rounded-md shadow-sm">
+          <div>
+            <p class="text-lg font-semibold text-gray-700">{{ purchase.title }}</p>
+            <p class="text-sm text-gray-500">{{ purchase.artist }}</p>
+          </div>
+          <div class="text-sm text-gray-400">
+            {{ purchase.date | date:'mediumDate' }}
+          </div>
         </li>
       </ul>
     </div>
-    <ng-template #noAlbums>
-      <p class="text-gray-500">Vous n'avez pas encore acheté d'albums.</p>
+    <div *ngFor="let purchase of purchases">
+      <div>
+        <h3>{{ purchase.title }}</h3>
+        <!-- Bouton pour supprimer un achat --
+        <button (click)="deletePurchase(purchase.id)">Supprimer</button>
+      </div>
+    </div>
+    
+    
+    <ng-template #noPurchases>
+      <p class="text-center text-2xl mt-4">Vous n'avez pas effectué d'achat.</p>
     </ng-template>
-  </div> -->
-</div>
+  </div>
+
+<div *ngIf="!currentUser" class="flex items-center justify-center">
+  <i class="fas fa-user text-gray-500 text-3xl"></i>
+  <i class="fas fa-comment-dots text-gray-500 text-3xl"></i>
+  <p class="ml-2 text-xl">Connectez-vous pour accéder à cette fonctionnalité</p>
+</div> -->

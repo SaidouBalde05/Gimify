@@ -1,0 +1,18 @@
+<footer class=" text-white p-4 mt-auto footer">
+  <div class="container mx-auto">
+    <div class="flex justify-between items-center">
+      <div class="text-sm">
+        © 2024 Gimify. Tous droits réservés.
+      </div>
+      <div class="space-x-4">
+        <a routerLink="/confidentialite" class="text-sm hover:underline">Politique de confidentialité</a>
+        <a routerLink="/condition" class="text-sm hover:underline">Conditions d'utilisation</a>
+        <a href="#" (click)="toggleContactForm($event)" class="text-sm hover:underline">Contactez-nous</a>
+      </div>
+    </div>
+  </div>
+
+  <div  *ngIf="showContactForm" class="mt-4 p-4 bg-gray-700" #contactForm>
+    <app-contact-form></app-contact-form>
+  </div>
+</footer>

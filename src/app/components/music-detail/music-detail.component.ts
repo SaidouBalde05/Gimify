@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Music } from '../../models/music.model';
-import { IndexedDbService } from '../../services/IndexedDB.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MusicService } from '../../services/music.service';
@@ -60,69 +58,4 @@ export class MusicDetailComponent implements OnInit {
   showListenMessages(): void {
     alert('Pour écouter l\'album, téléchargez notre application.');
   }
-  
-
-  // music: Music | undefined;
-  // isPurchased: boolean = false;
-  // showPayment: boolean = false;
-  // cardNumber: string = '';
-  // expiryDate: string = '';
-  // cvv: string = '';
-
-  // constructor(
-  //   private route: ActivatedRoute,
-  //   private indexedDbService: IndexedDbService
-  // ) {}
-
-  // ngOnInit(): void {
-  //   const idParam = this.route.snapshot.paramMap.get('id');
-  //   if (idParam) {
-  //     const id = parseInt(idParam, 10);
-  //     this.indexedDbService.getPublicationById(id).then(music => {
-  //       this.music = music;
-  //     });
-  //   }
-  // }
-
-  // showPaymentForm(): void {
-  //   this.showPayment = true;
-  // }
-
-  // processPayment(): void {
-  //   // Simuler un processus de paiement réussi
-  //   setTimeout(() => {
-  //     this.isPurchased = true;
-  //     this.showPayment = false;
-  //   }, 1000);
-  // }
-
-  // playAudio(): void {
-  //   alert('Pour écouter cette musique, veuillez télécharger notre application.');
-  // }
-
-  // music: Music | any;
-  // private audio = new Audio();
-
-  // constructor(
-  //   private route: ActivatedRoute,
-  //   private indexedDbService: IndexedDbService
-  // ) {}
-
-  // ngOnInit(): void {
-  //   const idParam = this.route.snapshot.paramMap.get('id');
-  //   if (idParam) {
-  //     const id = parseInt(idParam, 10);
-  //     this.indexedDbService.getPublicationById(id).then(music => {
-  //       this.music = music;
-  //       if (music) {
-  //         this.music.src = music.audioFiles;  // Assurez-vous que audioUrl existe dans votre modèle Music
-  //       }
-  //     });
-  //   }
-  // }
-
-  // playAudio(): void {
-  //   alert('Pour écouter cette musique, veuillez télécharger notre application.');
-  // }
 }
-

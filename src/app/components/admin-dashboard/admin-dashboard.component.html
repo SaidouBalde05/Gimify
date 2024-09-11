@@ -1,23 +1,222 @@
 <div class="admin-dashboard p-4">
-  <h2 class="text-2xl font-bold mb-6">Tableau de Bord Administrateur</h2>
+  <!-- Titre et informations générales -->
+  <h1 class="text-2xl font-bold mb-4">Tableau de bord Administrateur</h1>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    
-    <!-- Section Utilisateurs -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h3 class="text-xl font-semibold mb-4">Nombre total d'utilisateurs : {{ totalUsers }}</h3>
+  <!-- Section de statistiques générales -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-6">
+    <div class="bg-white shadow-md p-4 rounded-lg">
+      <h2 class="text-xl font-semibold">Albums vendus</h2>
+      <p class="text-3xl font-bold">{{ totalAlbumsSold }}</p>
+    </div>
+    <div class="bg-white shadow-md p-4 rounded-lg">
+      <h2 class="text-xl font-semibold">Revenus totaux</h2>
+      <p class="text-3xl font-bold">{{ totalRevenue | currency : "GNF" : 'code' }}</p>
+    </div>
+  </div>
+
+  <!-- Graphiques de ventes hebdomadaires -->
+  <div class="bg-white shadow-md p-4 rounded-lg mb-6">
+    <h2 class="text-xl font-semibold mb-4">Graphique des Ventes Hebdomadaires</h2>
+    <canvas id="salesChart" width="400" height="200"></canvas>
+  </div>
+
+  <!-- Boutons de contrôle pour les sections -->
+  <div class="flex justify-between items-center mb-6">
+    <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+      (click)="toggleSection('users')">
+      Gérer les Utilisateurs
+    </button>
+    <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
+      (click)="toggleSection('publications')">
+      Gérer les Publications
+    </button>
+    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded"
+      (click)="toggleSection('messages')">
+      Gérer les Messages
+      <span *ngIf="!showMessages && getUnreadMessagesCount() > 0" class="ml-2 text-red-500">
+        ({{ getUnreadMessagesCount() }} non lus)
+      </span>
+    </button>
+  </div>
+
+  <!-- Section utilisateurs -->
+  <div *ngIf="showUsers" class="mb-6">
+    <h2 class="text-xl font-semibold mb-4">Liste des utilisateurs</h2>
+    <table class="table-auto w-full bg-white shadow-md rounded-lg">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="p-2">Nom</th>
+          <th class="p-2">Email</th>
+          <th class="p-2">Rôle</th>
+          <th class="p-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td class="p-2">{{ user.firstName }} {{ user.lastName }}</td>
+          <td class="p-2">{{ user.username }}</td>
+          <td class="p-2">{{ user.role }}</td>
+          <td class="p-2">
+            <button class="text-red-500 hover:text-red-700" (click)="deleteUser(user.id)">
+              Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div> 
+
+  <!-- Section publications -->
+  <div *ngIf="showPublications" class="bg-white p-6 rounded-lg shadow-lg lg:col-span-2">
+    <h3 class="text-xl font-semibold mb-4">Liste des Publications</h3>
+    <div *ngIf="musicSales.length > 0" class="overflow-x-auto">
+      <table class="w-full table-auto mb-6">
+        <thead>
+          <tr>
+            <th class="px-4 py-2 text-left">Titre</th>
+            <th class="px-4 py-2 text-left">Artiste</th>
+            <th class="px-4 py-2 text-left">Ventes</th>
+            <th class="px-4 py-2 text-left">Prix</th>
+            <th class="px-4 py-2 text-left">Revenu Personnel</th>
+            <th class="px-4 py-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of musicSales">
+            <td class="border px-4 py-2">{{ item.music.title }}</td>
+            <td class="border px-4 py-2">{{ item.music.artist }}</td>
+            <td class="border px-4 py-2">{{ item.sales }}</td>
+            <td class="border px-4 py-2">{{ item.music.price | currency:'GNF':'code' }}</td>
+            <td class="border px-4 py-2">
+              {{ (item.sales * item.music.personalRevenue) | currency:'GNF':'code' }}
+            </td>
+            <td class="border px-4 py-2">
+              <button
+                (click)="deleteAlbum(item.music.id)"
+                class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                <i class="fas fa-trash-alt"></i> Supprimer
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="musicSales.length === 0" class="text-gray-500">Aucune publication trouvée.</div>
+  </div>
+
+  <!-- Section messages -->
+  <div *ngIf="showMessages" class="mb-6">
+    <h2 class="text-xl font-semibold mb-4">Liste des messages</h2>
+    <table class="table-auto w-full bg-white shadow-md rounded-lg">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="p-2">Nom</th>
+          <th class="p-2">Email</th>
+          <th class="p-2">Message</th>
+          <th class="p-2">Date</th>
+          <th class="p-2">Status</th>
+          <th class="p-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let message of messages">
+          <td class="p-2">{{ message.name }}</td>
+          <td class="p-2">{{ message.email }}</td>
+          <td class="p-2">{{ message.message }}</td>
+          <td class="p-2"> {{ message.date | date:'short' }}</td>
+          <th><span [ngClass]="{'text-green-500': message.isRead, 'text-red-500': !message.isRead}">
+            {{ message.isRead ? 'Lu' : 'Non Lu' }}
+          </span></th>
+          <td class="p-2">
+            <button 
+              class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+              (click)="toggleReadStatus(message)">
+              Marquer comme {{ message.isRead ? 'Non Lu' : 'Lu' }}
+            </button>
+            <button 
+              class="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+              (click)="deleteMessage(message.id)">
+              Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div> 
+</div>
+
+
+
+
+
+
+<!-- <div class="admin-dashboard p-4">
+  <h2 class="text-2xl font-bold mb-6 text-center lg:text-left">Tableau de Bord Administrateur</h2>
+
+  <!-- Grid Layout pour les statistiques --
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <!-- Statistiques en haut --
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+      <h3 class="text-3xl font-bold text-blue-500">
+        <i class="fas fa-users"></i> {{ totalUsers }}
+      </h3>
+      <p class="text-gray-500">Nombre d'Utilisateurs</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+      <h3 class="text-3xl font-bold text-green-500">
+        <i class="fas fa-record-vinyl"></i> {{ totalAlbumsSold }}
+      </h3>
+      <p class="text-gray-500">Albums Vendus</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+      <h3 class="text-3xl font-bold text-red-500">
+        <i class="fas fa-money-bill-wave"></i> {{ totalRevenue | currency:'GNF':'code' }}
+      </h3>
+      <p class="text-gray-500">Revenu Total</p>
+    </div>
+  </div>
+
+  <!-- Ventes Mensuelles --
+  <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+    <h3 class="text-xl font-semibold mb-4">Ventes Mensuelles</h3>
+    <div class="w-full">
+      <canvas id="salesChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Boutons pour afficher/masquer les sections --
+  <div class="mb-4 text-right">
+    <button 
+      class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+      (click)="toggleUsers()">
+      {{ showUsers ? 'Masquer les utilisateurs' : 'Afficher les utilisateurs' }}
+    </button>
+    <button 
+      class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 ml-2"
+      (click)="togglePublications()">
+      {{ showPublications ? 'Masquer les publications' : 'Afficher les publications' }}
+    </button>
+  </div>
+
+  <!-- Sections des utilisateurs et des publications --
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Liste des utilisateurs --
+    <div *ngIf="showUsers" class="bg-white p-6 rounded-lg shadow-lg lg:col-span-1">
+      <h3 class="text-xl font-semibold mb-4">Liste des Utilisateurs</h3>
       <div *ngIf="users.length > 0">
         <ul class="list-none">
-          <li *ngFor="let user of users" class="mb-4 flex items-center justify-between p-4 border border-gray-300 rounded-lg">
+          <li *ngFor="let user of users" class="mb-4 p-4 border border-gray-300 rounded-lg flex flex-col justify-between">
             <div>
               <p class="font-semibold">{{ user.username }}</p>
               <p class="text-gray-600">{{ user.role }}</p>
+              <p class="text-gray-600">{{ user.firstName }} {{ user.lastName }}</p>
             </div>
             <button
               (click)="deleteUser(user.id)"
-              class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+              class="mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 self-end"
             >
-              Supprimer
+              <i class="fas fa-trash-alt"></i> Supprimer
             </button>
           </li>
         </ul>
@@ -25,80 +224,255 @@
       <div *ngIf="users.length === 0" class="text-gray-500">Aucun utilisateur trouvé.</div>
     </div>
 
-    <!-- Section Ventes -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-      <h3 class="text-xl font-semibold mb-4">Toutes les publications</h3>
-      <div *ngIf="musicSales.length > 0">
-        <table class="w-full table-auto">
+    <!-- Liste des publications --
+    <div *ngIf="showPublications" class="bg-white p-6 rounded-lg shadow-lg lg:col-span-2">
+      <h3 class="text-xl font-semibold mb-4">Liste des Publications</h3>
+      <div *ngIf="musicSales.length > 0" class="overflow-x-auto">
+        <table class="w-full table-auto mb-6">
           <thead>
             <tr>
               <th class="px-4 py-2 text-left">Titre</th>
               <th class="px-4 py-2 text-left">Artiste</th>
-              <th class="px-4 py-2 text-left">Description</th>
               <th class="px-4 py-2 text-left">Ventes</th>
+              <th class="px-4 py-2 text-left">Prix</th>
+              <th class="px-4 py-2 text-left">Revenu Personnel</th>
+              <th class="px-4 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of musicSales" class="text-gray-700">
+            <tr *ngFor="let item of musicSales">
               <td class="border px-4 py-2">{{ item.music.title }}</td>
               <td class="border px-4 py-2">{{ item.music.artist }}</td>
-              <td class="border px-4 py-2">{{ item.music.description }}</td>
               <td class="border px-4 py-2">{{ item.sales }}</td>
+              <td class="border px-4 py-2">{{ item.music.price | currency:'GNF':'code' }}</td>
+              <td class="border px-4 py-2">
+                {{ (item.sales * item.music.personalRevenue) | currency:'GNF':'code' }}
+              </td>
+              <td class="border px-4 py-2">
+                <button
+                  (click)="deleteAlbum(item.music.id)"
+                  class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                  <i class="fas fa-trash-alt"></i> Supprimer
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div *ngIf="musicSales.length === 0" class="text-gray-500">Aucun album publié.</div>
+      <div *ngIf="musicSales.length === 0" class="text-gray-500">Aucune publication trouvée.</div>
     </div>
-  
   </div>
-</div>
+
+  <!-- Section des Messages --
+  <div class="user-dashboard p-4 mt-8">
+    <h2 class="text-2xl font-bold mb-6 text-center lg:text-left">Liste des Messages</h2>
+
+    <!-- Bouton pour afficher/masquer la liste des messages --
+    <div class="text-right mb-4">
+      <button 
+        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+        (click)="toggleMessages()">
+        {{ showMessages ? 'Masquer les messages' : 'Afficher les messages' }}
+        <span *ngIf="!showMessages && getUnreadMessagesCount() > 0" class="ml-2 text-red-500">
+          ({{ getUnreadMessagesCount() }} non lus)
+        </span>
+      </button>
+    </div>
+
+    <!-- Liste des messages --
+    <div *ngIf="showMessages" class="bg-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-xl font-semibold mb-4">Messages</h3>
+      <div *ngIf="messages.length > 0">
+        <ul class="list-none">
+          <li *ngFor="let message of messages" class="mb-4 p-4 border border-gray-300 rounded-lg">
+            <p><strong>Nom:</strong> {{ message.name }}</p>
+            <p><strong>Email:</strong> {{ message.email }}</p>
+            <p><strong>Message:</strong> {{ message.message }}</p>
+            <p><strong>Date:</strong> {{ message.date | date:'short' }}</p>
+            <p><strong>Status:</strong> 
+              <span [ngClass]="{'text-green-500': message.isRead, 'text-red-500': !message.isRead}">
+                {{ message.isRead ? 'Lu' : 'Non Lu' }}
+              </span>
+            </p>
+            <button 
+              class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+              (click)="toggleReadStatus(message)">
+              Marquer comme {{ message.isRead ? 'Non Lu' : 'Lu' }}
+            </button>
+            <button 
+              class="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+              (click)="deleteMessage(message.id)">
+              Supprimer
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="messages.length === 0" class="text-gray-500">Aucun message trouvé.</div>
+    </div>
+  </div>
+</div> -->
+
+
+
+
 
 
 <!-- <div class="admin-dashboard p-4">
-  <h2 class="text-2xl font-bold mb-6">Tableau de Bord Administrateur</h2>
+  <h2 class="text-2xl font-bold mb-6 text-center lg:text-left">Tableau de Bord Administrateur</h2>
 
-  <div class="mb-4">
-    <h3 class="text-xl font-semibold">Nombre total d'utilisateurs : {{ totalUsers }}</h3>
-    <div *ngIf="users.length > 0" >
-      <ul class="list-disc pl-5">
-        <li *ngFor="let user of users" class="mb-4 flex items-center justify-between p-4 border border-gray-300 rounded-lg">
-          <div>
-            <p class="font-semibold">{{ user.username }}</p>
-            <p class="text-gray-600">{{ user.role }}</p>
-          </div>
-          <button
-            (click)="deleteUser(user.id)"
-            class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-          >
+  <!-- Grid Layout --
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Statistiques en haut --
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+      <h3 class="text-3xl font-bold text-blue-500">
+        <i class="fas fa-users"></i> {{ totalUsers }}
+      </h3>
+      <p class="text-gray-500">Nombre d'Utilisateurs</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+      <h3 class="text-3xl font-bold text-green-500">
+        <i class="fas fa-record-vinyl"></i> {{ totalAlbumsSold }}
+      </h3>
+      <p class="text-gray-500">Albums Vendus</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+      <h3 class="text-3xl font-bold text-red-500">
+        <i class="fas fa-money-bill-wave"></i> {{ totalRevenue | currency:'GNF':'code' }}
+      </h3>
+      <p class="text-gray-500">Revenu Total</p>
+    </div>
+    
+    <div class="col-span-3 bg-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-xl font-semibold mb-4">Ventes Mensuelles</h3>
+      <div class="w-full">
+        <canvas id="salesChart"></canvas>
+      </div>
+    </div>
+    
+    <!-- Boutons pour afficher/masquer les sections --
+    <div class="col-span-3 mb-4">
+      <div class="text-right mb-4">
+        <button 
+          class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+          (click)="toggleUsers()">
+          {{ showUsers ? 'Masquer les utilisateurs' : 'Afficher les utilisateurs' }}
+        </button>
+        <button 
+          class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 ml-2"
+          (click)="togglePublications()">
+          {{ showPublications ? 'Masquer les publications' : 'Afficher les publications' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Liste des utilisateurs --
+    <div *ngIf="showUsers" class="bg-white p-6 rounded-lg shadow-lg lg:col-span-1 lg:row-span-2">
+      <h3 class="text-xl font-semibold mb-4">Nombre total d'utilisateurs : {{ totalUsers }}</h3>
+      <div *ngIf="users.length > 0">
+        <ul class="list-none">
+          <li *ngFor="let user of users" class="mb-4 p-4 border border-gray-300 rounded-lg flex flex-col justify-between">
+            <div>
+              <p class="font-semibold">{{ user.username }}</p>
+              <p class="text-gray-600">{{ user.role }}</p>
+              <p class="text-gray-600"> {{user.firstName}} {{user.lastName}} </p>
+            </div>
+            <button
+              (click)="deleteUser(user.id)"
+              class="mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 self-end"
+            >
+              <i class="fas fa-trash-alt"></i> Supprimer
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="users.length === 0" class="text-gray-500">Aucun utilisateur trouvé.</div>
+    </div>
+
+    <!-- Liste des publications --
+    <div *ngIf="showPublications" class="bg-white p-6 rounded-lg shadow-lg lg:col-span-2 lg:row-span-2">
+      <h3 class="text-xl font-semibold mb-4">Toutes les publications</h3>
+      <div *ngIf="musicSales.length > 0" class="overflow-x-auto">
+        <table class="w-full table-auto mb-6">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 text-left">Titre</th>
+              <th class="px-4 py-2 text-left">Artiste</th>
+              <th class="px-4 py-2 text-left">Ventes</th>
+              <th class="px-4 py-2 text-left">Prix</th>
+              <th class="px-4 py-2 text-left">Revenu Personnel</th>  
+              <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of musicSales">
+              <td class="border px-4 py-2">{{ item.music.title }}</td>
+              <td class="border px-4 py-2">{{ item.music.artist }}</td>
+              <td class="border px-4 py-2">{{ item.sales }}</td>
+              <td class="border px-4 py-2">{{ item.music.price | currency:'GNF':'code' }}</td>
+              <td class="border px-4 py-2">
+                <!-- Calcul du revenu personnel pour cet album --
+                {{ item.sales * item.music.personalRevenue | currency:'GNF':'code' }} 
+              </td>
+              <td class="border px-4 py-2">
+                <button
+                  (click)="deleteAlbum(item.music.id)"
+                  class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                  <i class="fas fa-trash-alt"></i> Supprimer
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="musicSales.length === 0" class="text-gray-500">Aucune publication trouvée.</div>
+    </div> 
+  </div>
+</div>
+<div class="user-dashboard p-4 mt-8"></div>
+  <h2 class="text-2xl font-bold mb-6 text-center lg:text-left">Liste des Messages</h2>
+
+  <!-- Bouton pour afficher/masquer la liste des messages --
+  <div class="text-right mb-4">
+    <button 
+      class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+      (click)="toggleMessages()">
+      {{ showMessages ? 'Masquer les messages' : 'Afficher les messages' }}
+      <span *ngIf="!showMessages && getUnreadMessagesCount() > 0" class="ml-2 text-red-500">
+        ({{ getUnreadMessagesCount() }} non lus)
+      </span>
+    </button>
+  </div>
+
+  <!-- Liste des messages --
+  <div *ngIf="showMessages" class="bg-white p-6 rounded-lg shadow-lg">
+    <h3 class="text-xl font-semibold mb-4">Messages</h3>
+    <div *ngIf="messages.length > 0">
+      <ul class="list-none">
+        <li *ngFor="let message of messages" class="mb-4 p-4 border border-gray-300 rounded-lg">
+          <p><strong>Nom:</strong> {{ message.name }}</p>
+          <p><strong>Email:</strong> {{ message.email }}</p>
+          <p><strong>Message:</strong> {{ message.message }}</p>
+          <p><strong>Date:</strong> {{ message.date | date:'short' }}</p>
+          <p><strong>Status:</strong> 
+            <span [ngClass]="{'text-green-500': message.isRead, 'text-red-500': !message.isRead}">
+              {{ message.isRead ? 'Lu' : 'Non Lu' }}
+            </span>
+          </p>
+          <button 
+            class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+            (click)="toggleReadStatus(message)">
+            Marquer comme {{ message.isRead ? 'Non Lu' : 'Lu' }}
+          </button>
+          <button 
+            class="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+            (click)="deleteMessage(message.id)">
             Supprimer
           </button>
         </li>
       </ul>
     </div>
-  </div>
-
-  <div *ngIf="musicSales.length === 0" class="text-center text-gray-500">Aucun album publié.</div>
-  <div class="admin-dashboard p-4">
-    <h2 class="text-2xl font-bold mb-4">Tableau de bord de l'administrateur</h2>
-  
-    <h3 class="text-xl font-semibold mb-2">Toutes les publications</h3>
-    <table class="w-full table-auto mb-6">
-      <thead>
-        <tr>
-          <th class="px-4 py-2">Titre</th>
-          <th class="px-4 py-2">Artiste</th>
-          <th class="px-4 py-2">Description</th>
-          <th class="px-4 py-2">Ventes</th>
-        </tr>
-      </thead>
-      <tbody *ngFor="let item of musicSales">
-        <tr class="text-white">
-          <td class="border px-4 py-2">{{ item.music.title }}</td>
-          <td class="border px-4 py-2">{{ item.music.artist }}</td>
-          <td class="border px-4 py-2">{{ item.music.description }}</td>
-          <td class="px-4 py-2">{{ item.sales }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div *ngIf="messages.length === 0" class="text-gray-500">Aucun message trouvé.</div>
   </div> -->

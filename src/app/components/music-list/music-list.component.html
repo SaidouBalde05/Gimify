@@ -1,83 +1,361 @@
-<div *ngFor="let music of musics" class="music-item border rounded-lg p-4 mb-4 shadow-lg text-white">
-  <h3 class="text-lg font-bold mb-2">{{ music.title }}</h3>
-  <p class="text-white">{{ music.artist }}</p>
-
-    <img
-    [id]="'image-' + music.id"
-    [src]="music.imageUrl"
-    [ngClass]="isImageExpanded(music.id) ? 'w-48 h-48' : 'w-32 h-32'"
-    (click)="toggleImageSize(music.id)"
-    alt="Cover{{music.title}}"
-    class="rounded-lg shadow-md cursor-pointer transition-transform duration-300"
-  />
-
-  <button 
-  (click)="toggleMusicList(music.id)" 
-  class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-  {{ isMusicListVisible(music.id) ? 'Cacher les musiques' : 'Afficher les musiques' }}
-</button>
-
-<!-- Liste des musiques de l'album -->
-<ul *ngIf="isMusicListVisible(music.id)" class="mt-2">
-  <li *ngFor="let audio of music.audioFiles" class="text-black">
-    {{ audio }}
-  </li>
-</ul>
-
-  <!-- Bouton pour acheter -->
-  <!-- <button (click)="onBuyMusic(music.id, music.title)" class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600">
-    Acheter
-  </button> -->
-
-  <button *ngIf="!canListen(music.id)" (click)="onBuyMusic(music.id, music.title)" class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600">
-    Acheter
-  </button>
-
-    <!-- Formulaire de paiement -->
-    <!-- <div *ngIf="showPaymentForm && selectedMusicId === music.id">
-      <form (ngSubmit)="onConfirmPurchase(music.id, music.title)">
-        <label for="cardNumber">Numéro de carte :</label>
-        <input type="text" id="cardNumber" name="cardNumber" required>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600">Payer</button>
-      </form>
-    </div> -->
-
-    <!-- Bouton Écouter -->
-    <!-- <button *ngIf="canListen(music.id)" (click)="onListenMusic()">Écouter</button> -->
-  
-  
-  <!-- <button (click)="onBuy(music.id)" class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600">
-    Acheter
-  </button> -->
-
-  <!-- Formulaire de paiement -->
-  <div  *ngIf="showPaymentForm && selectedMusicId === music.id" class="mt-4 p-4 border rounded-lg bg-white shadow-lg text-gray-800">
-    <h4 class="text-lg font-bold mb-2">Formulaire de paiement</h4>
-    <form (ngSubmit)="onConfirmPurchase(music.id, music.title)">
-      <div class="mb-4">
-        <label for="cardNumber" class="block text-sm font-medium mb-1">Numéro de carte :</label>
-        <input type="text" id="cardNumber" [(ngModel)]="cardNumber" name="cardNumber" required
-               class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
-
-      <div class="mb-4">
-        <label for="expiryDate" class="block text-sm font-medium mb-1">Date d'expiration :</label>
-        <input type="text" id="expiryDate" [(ngModel)]="expiryDate" name="expiryDate" required
-               class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
-
-      <div class="mb-4">
-        <label for="cvv" class="block text-sm font-medium mb-1">CVV :</label>
-        <input type="text" id="cvv" [(ngModel)]="cvv" name="cvv" required
-               class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
-
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Payer</button>
-    </form>
+<!-- Barre de recherche
+<div class="flex justify-center mb-4">
+  <div class="relative w-full max-w-lg">
+    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="filterMusics()"
+      placeholder="Rechercher par titre ou artiste..."
+      class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
   </div>
-
-  <!-- Bouton pour écouter (n'apparaît que si l'album est acheté) -->
-  <button *ngIf="canListen(music.id)" (click)="onListenMusic()" class="bg-yellow-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-yellow-600">
-    Écouter
-  </button>
 </div>
+
+<!-- Menu déroulant pour le tri --
+<div class="flex justify-center mb-4">
+  <select [(ngModel)]="sortBy" (change)="onSortChange(sortBy)"
+          class="border border-gray-300 rounded py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <option value="date">Trier par date</option>
+    <option value="name">Trier par Nom</option>
+  </select>
+</div>
+
+<!-- Conteneur pour les cartes --
+<div class="w-full max-w-4xl mx-auto">
+  <!-- Grille de cartes avec deux colonnes --
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- Liste des musiques filtrées --
+    <div *ngFor="let music of filterMusics()" class="music-item border rounded-lg p-4 shadow-lg text-black bg-white bg-opacity-50 backdrop-blur-md">
+      
+      <!-- Conteneur principal pour le titre et les actions --
+      <div class="flex flex-col">
+        
+        <!-- Détails de l'album --
+        <div class="mb-4">
+          <h1 class="text-lg font-bold mb-2">Artist: <strong>{{ music.artist | titlecase }}</strong></h1>
+          <h3 class="text-lg font-bold mb-2">Album: {{ music.title | uppercase }}</h3>
+          <p>Prix: <strong>{{ music.price | currency: 'GNF': 'code' }}</strong></p>
+          <p>Mise en vente le: <strong>{{ music.releaseDate | date: 'dd/MM/yyyy' }}</strong></p>
+          
+          <!-- Image avec taille ajustable --
+          <img
+            [id]="'image-' + music.id"
+            [src]="music.imageUrl"
+            [ngClass]="{
+              'w-48 h-48': !isImageExpanded(music.id) && !isImageMaximized(music.id),
+              'w-64 h-64': isImageExpanded(music.id) && !isImageMaximized(music.id),
+              'w-full h-full': isImageMaximized(music.id)
+            }"
+            (click)="toggleImageSize(music.id)"
+            alt="Cover {{ music.title }}"
+            class="rounded-lg shadow-md cursor-pointer transition-transform duration-300 mx-auto"
+            [style.max-width.px]="maxImageWidth"
+            [style.max-height.px]="maxImageHeight"
+          />
+          
+          <!-- Bouton pour télécharger l'image --
+          <button 
+            *ngIf="isImageExpanded(music.id)" 
+            (click)="downloadImage(music.imageUrl, music.title + '.jpg')" 
+            class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 w-full">
+            Télécharger l'image
+          </button>
+        </div>
+
+        <!-- Actions --
+        <div class="flex flex-col">
+          <button 
+            (click)="toggleMusicList(music.id)" 
+            class="mt-4 px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-600 w-full">
+            <!-- Affiche le nombre de musiques si la liste est masquée --
+            {{ isMusicListVisible(music.id) ?  'Masquer' : 'Afficher (' + music.audioFiles.length + ' musiques)' }}
+          </button>
+
+          <!-- Liste des musiques de l'album --
+          <ul *ngIf="isMusicListVisible(music.id)" class="mt-2">
+            <li *ngFor="let audio of music.audioFiles" class="text-black">
+              {{ audio }}
+            </li>
+          </ul>
+
+          <!-- Bouton d'achat --
+          <button *ngIf="!hasPurchased(music.id)" 
+            (click)="onBuyMusic(music.id, music.title)"
+            class="bg-blue-200 text-black px-4 py-2 rounded-lg mt-4 hover:bg-blue-300 w-full">
+            Acheter
+          </button>
+
+          <!-- Formulaire de confirmation d'achat --
+          <div *ngIf="showPaymentForm && selectedMusicId === music.id" 
+              class="mt-4 p-4 border rounded-lg bg-white bg-opacity-75 shadow-lg text-gray-800">
+            <h4 class="text-lg font-bold mb-2">Achat Terminé?</h4>
+            <form (ngSubmit)="onConfirmPurchase(music.id, music.title)">
+              <button 
+              type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 w-full">Oui</button>
+            </form>
+          </div>
+
+          <!-- Bouton pour écouter (visible uniquement après achat) --
+          <button *ngIf="canListen(music.id)" 
+            (click)="onListen()" 
+            class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600 w-full">
+            Écouter
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ -->
+
+
+<!-- Barre de recherche -->
+<div class="flex justify-center mb-4">
+  <div class="relative w-full max-w-lg">
+    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="filterMusics()"
+      placeholder="Rechercher par titre ou artiste..."
+      class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+</div>
+
+<!-- Menu déroulant pour le tri -->
+<div class="flex justify-center mb-4">
+  <select [(ngModel)]="sortBy" (change)="filterMusics()"
+          class="border border-gray-300 rounded py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <option value="date">Trier par date</option>
+    <option value="name">Trier par Nom</option>
+  </select>
+</div>
+
+<!-- Conteneur pour les cartes -->
+<div class="w-full max-w-4xl mx-auto">
+  <!-- Grille de cartes avec deux colonnes -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- Liste des musiques filtrées -->
+    <div *ngFor="let music of filterMusics()" class="music-item border rounded-lg p-4 shadow-lg text-black bg-white bg-opacity-50 backdrop-blur-md">
+      
+      <!-- Conteneur principal pour le titre et les actions -->
+      <div class="flex flex-col">
+        
+        <!-- Détails de l'album -->
+        <div class="mb-4">
+          <h1 class="text-lg font-bold mb-2">Artist: <strong>{{ music.artist | titlecase }}</strong></h1>
+          <h3 class="text-lg font-bold mb-2">Album: {{ music.title | uppercase }}</h3>
+          <p>Prix: <strong>{{ music.price | currency: 'GNF': 'code' }}</strong></p>
+          <p>Mise en vente le: <strong>{{ music.releaseDate | date: 'dd/MM/yyyy' }}</strong></p>
+          
+          <!-- Image avec taille ajustable -->
+          <img
+            [id]="'image-' + music.id"
+            [src]="music.imageUrl"
+            [ngClass]="{
+              'w-48 h-48': !isImageExpanded(music.id) && !isImageMaximized(music.id),
+              'w-64 h-64': isImageExpanded(music.id) && !isImageMaximized(music.id),
+              'w-full h-full': isImageMaximized(music.id)
+            }"
+            (click)="toggleImageSize(music.id)"
+            alt="Cover {{ music.title }}"
+            class="rounded-lg shadow-md cursor-pointer transition-transform duration-300 mx-auto"
+            [style.max-width.px]="maxImageWidth"
+            [style.max-height.px]="maxImageHeight"
+          />
+          
+          <!-- Bouton pour télécharger l'image -->
+          <button 
+            *ngIf="isImageExpanded(music.id)" 
+            (click)="downloadImage(music.imageUrl, music.title + '.jpg')" 
+            class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 w-full">
+            Télécharger l'image
+          </button>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex flex-col">
+          <button 
+            (click)="toggleMusicList(music.id)" 
+            class="mt-4 px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-600 w-full">
+            <!-- Affiche le nombre de musiques si la liste est masquée -->
+            {{ isMusicListVisible(music.id) ?  'Masquer' : 'Afficher (' + music.audioFiles.length + ' musiques)' }}
+          </button>
+
+          <!-- Liste des musiques de l'album -->
+          <ul *ngIf="isMusicListVisible(music.id)" class="mt-2">
+            <li *ngFor="let audio of music.audioFiles" class="text-black">
+              {{ audio }}
+            </li>
+          </ul>
+
+          <!-- Bouton d'achat -->
+          <button *ngIf="!hasPurchased(music.id)" 
+                  (click)="onBuyMusic(music.id, music.title, music.price)"
+                  class="bg-blue-200 text-black px-4 py-2 rounded-lg mt-4 hover:bg-blue-300 w-full">
+            Acheter
+          </button>
+
+          <!-- Formulaire de confirmation d'achat -->
+          <!-- <div *ngIf="showPaymentForm && selectedMusicId === music.id" 
+               class="mt-4 p-4 border rounded-lg bg-white bg-opacity-75 shadow-lg text-gray-800">
+            <h4 class="text-lg font-bold mb-2">Achat Terminé?</h4>
+            <form (ngSubmit)="onConfirmPurchase(music.id, music.title)">
+              <button 
+                type="submit" 
+                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 w-full">Oui
+              </button>
+            </form>
+          </div> -->
+          <div *ngIf="showPaymentForm && selectedMusicId === music.id" 
+            class="mt-4 p-4 border rounded-lg bg-white bg-opacity-75 shadow-lg text-gray-800">
+            <h4 class="text-lg font-bold mb-2">Achat Terminé?</h4>
+            <form (ngSubmit)="onConfirmPurchase(music.id, music.title)">
+              <button 
+                type="submit" 
+                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 w-full">Oui
+              </button>
+            </form>
+          </div>
+
+
+          <!-- Bouton pour écouter (visible uniquement après achat) -->
+          <button *ngIf="canListen(music.id)" 
+                  (click)="onListen()" 
+                  class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600 w-full">
+            Écouter
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Barre de recherche --
+<div class="flex justify-center mb-4">
+  <div class="relative w-full max-w-lg">
+    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="filterMusics()"
+      placeholder="Rechercher par titre ou artiste..."
+      class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+</div>
+
+<!-- Menu déroulant pour le tri --
+<div class="flex justify-center mb-4">
+  <select [(ngModel)]="sortBy" (change)="onSortChange(sortBy)"
+          class="border border-gray-300 rounded py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <option value="date">Trier par date</option>
+    <option value="name">Trier par Nom</option>
+  </select>
+</div>
+
+<!-- Conteneur pour les cartes --
+<div class="w-full max-w-4xl mx-auto">
+  <!-- Grille de cartes avec deux colonnes --
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- Liste des musiques filtrées --
+    <div *ngFor="let music of filterMusics()" class="music-item border rounded-lg p-4 shadow-lg text-black bg-white bg-opacity-50 backdrop-blur-md">
+      
+      <!-- Conteneur principal pour le titre et les actions --
+      <div class="flex flex-col">
+        
+        <!-- Détails de l'album --
+        <div class="mb-4">
+          <h1 class="text-lg font-bold mb-2">Artist: <strong>{{ music.artist | titlecase }}</strong></h1>
+          <h3 class="text-lg font-bold mb-2">Album: {{ music.title | uppercase }}</h3>
+          <p>Prix: <strong>{{ music.price | currency: 'GNF': 'code' }}</strong></p>
+          <p>Mise en vente le: <strong>{{ music.releaseDate | date: 'dd/MM/yyyy' }}</strong></p>
+          
+          <!-- Image avec taille ajustable --
+          <img
+            [id]="'image-' + music.id"
+            [src]="music.imageUrl"
+            [ngClass]="{
+              'w-48 h-48': !isImageExpanded(music.id) && !isImageMaximized(music.id),
+              'w-64 h-64': isImageExpanded(music.id) && !isImageMaximized(music.id),
+              'w-full h-full': isImageMaximized(music.id)
+            }"
+            (click)="toggleImageSize(music.id)"
+            alt="Cover {{ music.title }}"
+            class="rounded-lg shadow-md cursor-pointer transition-transform duration-300 mx-auto"
+            [style.max-width.px]="maxImageWidth"
+            [style.max-height.px]="maxImageHeight"
+          />
+          
+          <!-- Bouton pour télécharger l'image --
+          <button 
+            *ngIf="isImageExpanded(music.id)" 
+            (click)="downloadImage(music.imageUrl, music.title + '.jpg')" 
+            class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 w-full">
+            Télécharger l'image
+          </button>
+        </div>
+
+        <!-- Actions --
+        <div class="flex flex-col">
+          <button 
+            (click)="toggleMusicList(music.id)" 
+            class="mt-4 px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-600 w-full">
+            <!-- Affiche le nombre de musiques si la liste est masquée --
+            {{ isMusicListVisible(music.id) ?  'Masquer' : 'Afficher (' + music.audioFiles.length + ' musiques)' }}
+          </button>
+
+          <!-- Liste des musiques de l'album --
+          <ul *ngIf="isMusicListVisible(music.id)" class="mt-2">
+            <li *ngFor="let audio of music.audioFiles" class="text-black">
+              {{ audio }}
+            </li>
+          </ul>
+
+          <!-- Bouton d'achat -->
+          <!-- <button *ngIf="!hasPurchased(music.id)" 
+            (click)="onBuyMusic(music.id, music.title, music.price)"
+            class="bg-blue-200 text-black px-4 py-2 rounded-lg mt-4 hover:bg-blue-300 w-full">
+            Acheter
+          </button> --
+          <button *ngIf="!hasPurchased(music.id)" 
+          (click)="onBuyMusic(music.id, music.title, music.price)"
+          class="bg-blue-200 text-black px-4 py-2 rounded-lg mt-4 hover:bg-blue-300 w-full">
+          Acheter
+        </button>
+
+          <!-- Formulaire de confirmation d'achat -->
+          <!-- <div *ngIf="showPaymentForm && selectedMusicId === music.id" 
+              class="mt-4 p-4 border rounded-lg bg-white bg-opacity-75 shadow-lg text-gray-800">
+            <h4 class="text-lg font-bold mb-2">Achat Terminé?</h4>
+            <form (ngSubmit)="onConfirmPurchase(music.id, music.title)">
+              <button 
+              type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 w-full">Oui</button>
+            </form>
+          </div> --
+          <div *ngIf="showPaymentForm && selectedMusicId === music.id" 
+              class="mt-4 p-4 border rounded-lg bg-white bg-opacity-75 shadow-lg text-gray-800">
+            <h4 class="text-lg font-bold mb-2">Achat Terminé?</h4>
+            <form (ngSubmit)="onConfirmPurchase(music.id, music.title)"  >
+              <button
+              type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 w-full">Oui</button>
+            </form>
+          </div>
+
+          <!-- Bouton pour écouter (visible uniquement après achat) --
+          <button *ngIf="canListen(music.id)" 
+            (click)="onListen()" 
+            class="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-green-600 w-full">
+            Écouter
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>  -->

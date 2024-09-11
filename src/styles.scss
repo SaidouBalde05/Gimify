@@ -1,11 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-    background-color: #253094; /* Ivoire */
-    color: #333; /* Couleur de texte sombre pour un bon contraste */
-  }
-  
+  background-image: url('/assets/logoteste2.png');
+  background-size: cover;          /* Ajuste l'image pour couvrir tout l'écran */
+  background-position: center;     /* Centre l'image */
+  background-repeat: no-repeat;    /* Empêche la répétition de l'image */
+  background-attachment: fixed;    /* Garde l'image fixe lors du défilement */
+  margin: 0;
+  padding: 0;
+  height: 100vh;                   /* Hauteur de la page égale à la taille de l'écran */
+  object-fit: cover;
+  background-color: rgba(255, 255, 255, 0.2); /* Couleur blanche avec opacité */
+  background-blend-mode: lighten; /* Mélange la couleur et l'image pour éclaircir */
+}
+.header{
+  background-color: rgb(18, 16, 83);
+}
+img{
+  object-fit: cover;
+}
+
+
+
   

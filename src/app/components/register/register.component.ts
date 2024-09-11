@@ -1,66 +1,66 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
 
+  firstName: string = ''; 
+  lastName: string = '';  
   username: string = '';
   password: string = '';
-  role: string = 'user';
+  role: any = 'user';
+  id!: number;
+  // purchasedMusicIds!: number[];
+  purchasedMusicIds!: [] 
+  acceptedTerms: boolean = false; // Pour la case à cocher des conditions d'utilisation
   registrationError: string | null = null;
+  passwordFieldType: string = 'password';
 
-  constructor(private authService: AuthService) {}
-
-  onSubmit(): void {
-    const userData = {
-      username: this.username,
-      password: this.password,
-      role: this.role
-    };
-
-    this.authService.addUser(userData).subscribe(
-      response => {
-        // Gérer la réponse, par exemple rediriger vers la page de connexion
-        console.log('Utilisateur ajouté avec succès', response);
-        // Réinitialiser le formulaire ou afficher un message de succès
-      },
-      error => {
-        // Gérer l'erreur, par exemple afficher un message d'erreur
-        console.error('Erreur lors de l\'ajout de l\'utilisateur', error);
-        this.registrationError = 'Erreur lors de l\'ajout de l\'utilisateur';
-      }
-    );
+  constructor(private authService: AuthService, private router: Router) {}
+  togglePasswordVisibility(): void {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
-  // username: string = '';
-  // password: string = '';
-  // role: 'admin' | 'user' = 'user';
+  onSubmit(): void {
+    if (!this.acceptedTerms) {
+      this.registrationError = "Vous devez accepter les conditions d'utilisation avant de créer un compte.";
+      return;
+    }
+    if (this.acceptedTerms) {
+      const userData = {
+        firstName: this.firstName,  
+        lastName: this.lastName,    
+        username: this.username,
+        password: this.password,
+        role: this.role,
+        id: this.id ,
+        purchasedMusicIds: this.purchasedMusicIds
 
-  // constructor(private authService: AuthService, private router: Router) {}
+      };
 
-  // ngOnInit(): void {
-  //   if (!this.authService.isAdmin()) {
-  //     alert('Access denied. Only administrators can create new accounts.');
-  //     this.router.navigate(['/login']);
-  //   }
-  // }
-  
-
-  // onSubmit(): void {
-  //   if (this.authService.isAdmin()) {
-  //     this.authService.register(this.username, this.password, this.role);
-  //     alert(`Account for ${this.username} created successfully!`);
-  //     this.router.navigate(['/admin-dashboard']);
-  //   } else {
-  //     alert('Only administrators can create new accounts.');
-  //   }
-  // }
+      this.authService.addUser(userData).subscribe(
+        response => {
+          // Gérer la réponse, par exemple rediriger vers la page de connexion
+          console.log('Utilisateur ajouté avec succès', response);
+          this.router.navigate(['/user-dashboard']);
+        },
+        error => {
+          // Gérer l'erreur, par exemple afficher un message d'erreur
+          console.error('Erreur lors de l\'ajout de l\'utilisateur', error);
+          this.registrationError = 'Erreur lors de l\'ajout de l\'utilisateur';
+        }
+      );
+    } else {
+      this.registrationError = "Vous devez accepter les conditions d'utilisation.";
+    }
+  }
 }

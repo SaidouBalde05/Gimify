@@ -89,33 +89,4 @@ export class PublicationService {
       console.error('IndexedDB error:', event);
     };
   }
-
-    // private publicationsKey = 'publications';
-
-    // constructor() {
-    //   this.loadPublications();
-    // }
-  
-    // private publications: any[] = [];
-  
-    // addPublication(publication: any) {
-    //   this.publications.push(publication);
-    //   this.savePublications();
-    // }
-  
-    // getPublications() {
-    //   return this.publications;
-    // }
-  
-    // private savePublications() {
-    //   localStorage.setItem(this.publicationsKey, JSON.stringify(this.publications));
-    // }
-  
-    // private loadPublications() {
-    //   const storedPublications = localStorage.getItem(this.publicationsKey);
-    //   if (storedPublications) {
-    //     this.publications = JSON.parse(storedPublications);
-    //   }
-    // }
-
 }
