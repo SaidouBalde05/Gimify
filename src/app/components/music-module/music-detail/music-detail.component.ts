@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MusicService } from '../../services/music.service';
+import { MusicService } from '../../../services/music.service';
 
 @Component({
   selector: 'app-music-detail',

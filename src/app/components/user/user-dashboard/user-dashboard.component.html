@@ -1,0 +1,75 @@
+<div *ngIf="!currentUser" class="flex flex-col items-center justify-center p-6 ">
+  <div class="flex items-center">
+    <i class="fas fa-user text-gray-500 text-4xl"></i>
+    <i class="fas fa-comment-dots text-gray-500 text-4xl ml-4"></i>
+  </div>
+  <p class="mt-4 text-xl ">Connectez-vous pour accéder à cette fonctionnalité</p>
+  <li class="mt-4 list-none">
+    <a routerLink="/login" class="text-blue-500 hover:text-blue-700 underline transition-colors duration-300 ease-in-out font-semibold">
+      Connecter-vous
+    </a>
+  </li>
+</div>
+
+<div *ngIf="currentUser">
+  <div class="flex items-center mb-4">
+    <i 
+      class="fas fa-cogs text-gray-600 text-2xl cursor-pointer transition-transform duration-300"
+      (click)="toggleUserInfo()"
+      [ngClass]="{'rotate-180': showUserInfo}"
+    ></i>
+  </div>
+
+  <div [ngClass]="{'hidden': !showUserInfo, 'fade-in': showUserInfo}" class="transition-all duration-500">
+    <button 
+      *ngIf="authService.isLoggedIn()" 
+      (click)="logout()"
+      class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+    >
+      Déconnexion
+    </button>
+
+    <p class="flex items-center">
+      <i class="fas fa-envelope text-gray-600 mr-2"></i>
+      Adresse email : <strong>{{ currentUser.username }}</strong>
+    </p>
+    <p class="flex items-center">
+      <i class="fas fa-user text-gray-600 mr-2"></i>
+      Prénom : <strong>{{ currentUser.firstName }}</strong>
+    </p>
+    <p class="flex items-center">
+      <i class="fas fa-user text-gray-600 mr-2"></i>
+      Nom : <strong>{{ currentUser.lastName }}</strong>
+    </p>
+  </div>
+
+  <h2 class="text-2xl font-bold mb-4 flex items-center">
+    <i class="fas fa-user-tie text-blue-500 mr-2"></i>
+    <span>{{ animatedText }}</span>
+  </h2> 
+</div>
+<div *ngIf="currentUser" class="shadow-md rounded-lg p-6">
+   <h2 class="text-2xl font-bold mb-4">Historique de vos Achats</h2>
+  <div *ngIf="purchases.length > 0; else noPurchases">
+    <ul class="space-y-4">
+      <li *ngFor="let purchase of purchases" class="flex justify-between items-center p-4 bg-gray-50 rounded-md shadow-sm">
+        <div>
+          <p class="text-lg font-semibold text-gray-700">{{ purchase.title }}</p>
+          <p class="text-sm text-gray-500">{{ purchase.artist }}</p>
+        </div>
+        <div>
+          <button 
+            (click)="deletePurchase(purchase.id)"
+            class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded shadow transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+          >
+            Supprimer
+          </button>
+        </div>
+      </li>
+    </ul> 
+  </div>
+
+  <ng-template #noPurchases>
+    <p class="text-center text-2xl mt-4">Vous n'avez pas effectué d'achat.</p>
+  </ng-template>
+</div>

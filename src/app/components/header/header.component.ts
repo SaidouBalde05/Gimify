@@ -3,8 +3,8 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MusicListComponent } from '../music-list/music-list.component';
-import { PublishMusicComponent } from '../publish-music/publish-music.component';
+import { MusicListComponent } from '../music-module/music-list/music-list.component';
+import { PublishMusicComponent } from '../music-module/publish-music/publish-music.component';
 
 @Component({
   selector: 'app-header',

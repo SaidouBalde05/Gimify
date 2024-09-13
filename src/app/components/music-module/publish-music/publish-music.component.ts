@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MusicService } from '../../services/music.service';
+import { MusicService } from '../../../services/music.service';
 import { FormBuilder, FormGroup, FormsModule, NgControl, NgControlStatusGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PublicationService } from '../../services/publication.service';
+import { PublicationService } from '../../../services/publication.service';
 import { CommonModule } from '@angular/common';
-import { IndexedDbService } from '../../services/IndexedDB.service';
-import { Music } from '../../models/music.model';
+import { IndexedDbService } from '../../../services/IndexedDB.service';
+import { Music } from '../../../models/music.model';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({

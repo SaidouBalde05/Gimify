@@ -1,0 +1,217 @@
+<!-- <form (ngSubmit)="onSubmit()" class="bg-white shadow-lg rounded-lg p-8 mb-4 max-w-lg mx-auto">
+  <h2 class="text-2xl font-bold mb-6 text-gray-800">Créer un compte</h2>
+  
+  <!-- Prénom --
+  <div class="mb-4">
+    <label for="firstName" class="block text-gray-700 text-sm font-semibold mb-2">Prénom :</label>
+    <input type="text" id="firstName" [(ngModel)]="firstName" name="firstName" required
+      class="shadow-md appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+  </div>
+  
+  <!-- Nom --
+  <div class="mb-4">
+    <label for="lastName" class="block text-gray-700 text-sm font-semibold mb-2">Nom :</label>
+    <input type="text" id="lastName" [(ngModel)]="lastName" name="lastName" required
+      class="shadow-md appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+  </div>
+  
+  <!-- Email --
+  <div class="mb-4">
+    <label for="username" class="block text-gray-700 text-sm font-semibold mb-2">Email :</label>
+    <input type="email" id="username" [(ngModel)]="username" name="username" required
+      class="shadow-md appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+  </div>
+  
+  <div class="mb-6 relative">
+    <label for="password" class="block text-gray-700 text-sm font-semibold mb-2">Mot de passe :</label>
+    <input type="password" id="password" [(ngModel)]="password" name="password" required [type]="passwordFieldType"
+      class="shadow-md appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+  
+    <button type="button" (click)="togglePasswordVisibility()"
+      class="absolute right-3 top-10 text-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-150 ease-in-out">
+      <i [ngClass]="passwordFieldType === 'password' ? 'fas fa-eye-slash' : 'fas fa-eye' "></i> 
+    </button>
+  </div>
+  
+  
+
+  <!-- Rôle --
+  <div class="mb-6">
+    <label for="role" class="block text-gray-700 text-sm font-semibold mb-2">Rôle :</label>
+    <select
+      id="role"
+      [(ngModel)]="role"
+      name="role"
+      required
+      class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+    >
+      <option value="user">Utilisateur</option>
+      <option value="admin">Administrateur</option>
+    </select>
+  </div>
+
+  <!-- Acceptation des conditions d'utilisation --
+  <div class="mb-6">
+    <label class="flex items-center">
+      <input type="checkbox" [(ngModel)]="acceptedTerms" name="acceptedTerms" required
+        class="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out">
+      <span class="ml-2 text-gray-700 text-sm">
+        J'accepte les <a routerLink="/condition" class="text-blue-500 underline">conditions d'utilisation</a>
+      </span>
+    </label>
+  </div>
+  
+  <div class="flex items-center justify-between">
+    <button type="submit"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+      S'inscrire
+    </button>
+  </div>
+</form>
+
+<!-- Message d'erreur --
+<div *ngIf="registrationError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mt-4 max-w-lg mx-auto" role="alert">
+  <strong class="font-bold">Erreur :</strong>
+  <span class="block sm:inline">{{ registrationError }}</span>
+</div> -->
+
+
+<!-- Formulaire d'inscription -->
+<!-- <form (ngSubmit)="onSubmit()" class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Créer un compte</h2>
+
+  <div class="mb-4">
+    <label for="firstName" class="block text-gray-700 text-sm font-bold mb-2">Prénom:</label>
+    <input id="firstName" [(ngModel)]="firstName" name="firstName" type="text" required
+           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+  </div>
+
+  <div class="mb-4">
+    <label for="lastName" class="block text-gray-700 text-sm font-bold mb-2">Nom:</label>
+    <input id="lastName" [(ngModel)]="lastName" name="lastName" type="text" required
+           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+  </div>
+
+  <div class="mb-4">
+    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+    <input id="username" [(ngModel)]="username" name="username" type="email" required
+           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+  </div>
+
+  <div class="mb-4">
+    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Mot de passe:</label>
+    <input id="password" [(ngModel)]="password" name="password" [type]="passwordFieldType" required
+           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+  </div>
+
+  <div class="mb-4" *ngIf="isAdmin">
+    <label for="role" class="block text-gray-700 text-sm font-bold mb-2">Rôle:</label>
+    <select id="role" [(ngModel)]="role" name="role"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value="user">Utilisateur</option>
+      <option value="admin">Administrateur</option>
+    </select>
+  </div>
+
+  <div class="mb-4 flex items-center">
+    <input id="terms" type="checkbox" [(ngModel)]="acceptedTerms" name="terms"
+           class="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out" />
+    <label for="terms" class="ml-2 text-gray-700 text-sm font-bold">J'accepte les conditions d'utilisation</label>
+  </div>
+
+  <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">S'inscrire</button>
+  <div class="mt-4">
+    <p class="text-gray-600">Déjà un compte ? <a routerLink="/login" class="text-blue-500 hover:underline">Connectez-vous ici</a>.</p>
+  </div>
+
+  <div *ngIf="registrationError" class="mt-4 text-red-500">
+    {{ registrationError }}
+  </div>
+</form> -->
+<div class="flex flex-col items-center justify-center min-h-screen">
+  <div class="mb-8 text-center">
+    <img src="assets/logo.jpg" alt="Gimify-Logo" class="w-24 h-24 mx-auto rounded-full shadow-lg" />
+  </div>
+  <form (ngSubmit)="onSubmit()" class="max-w-lg w-full p-8 bg-white shadow-lg rounded-lg border border-gray-200">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Créer un compte</h2>
+    <div class="mt-6 text-center">
+      <p class="text-gray-600">Déjà un compte ? <a routerLink="/login" class="text-blue-500 hover:underline font-semibold">Connectez-vous ici</a>.</p>
+    </div>
+
+    <!-- Prénom -->
+    <div class="mb-4">
+      <label for="firstName" class="block text-gray-700 text-sm font-semibold mb-2">Prénom:</label>
+      <input id="firstName" [(ngModel)]="firstName" name="firstName" type="text" required
+             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+
+    <!-- Nom -->
+    <div class="mb-4">
+      <label for="lastName" class="block text-gray-700 text-sm font-semibold mb-2">Nom:</label>
+      <input id="lastName" [(ngModel)]="lastName" name="lastName" type="text" required
+             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+
+    <!-- Téléphone -->
+    <div class="mb-4">
+      <label for="phoneNumber" class="block text-gray-700 text-sm font-semibold mb-2">Numéro de téléphone:</label>
+      <input id="phoneNumber" [(ngModel)]="phoneNumber" name="phoneNumber" type="text"
+             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+
+    <!-- Email -->
+    <div class="mb-4">
+      <label for="username" class="block text-gray-700 text-sm font-semibold mb-2">Email:</label>
+      <input id="username" [(ngModel)]="username" name="username" type="email" required
+             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+
+    <!-- Mot de passe -->
+    <div class="mb-6 relative">
+      <label for="password" class="block text-gray-700 text-sm font-semibold mb-2">Mot de passe :</label>
+      <input type="password" id="password" [(ngModel)]="password" name="password" required [type]="passwordFieldType"
+        class="shadow-md appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+    
+      <button type="button" (click)="togglePasswordVisibility()"
+        class="absolute right-3 top-10 text-blue-500 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-150 ease-in-out">
+        <i [ngClass]="passwordFieldType === 'password' ? 'fas fa-eye-slash' : 'fas fa-eye' "></i> 
+      </button>
+    </div>
+
+    <!-- Rôle (visible uniquement si admin) -->
+    <div class="mb-4" *ngIf="isAdmin">
+      <label for="role" class="block text-gray-700 text-sm font-semibold mb-2">Rôle:</label>
+      <select id="role" [(ngModel)]="role" name="role"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="user">Utilisateur</option>
+        <option value="admin">Administrateur</option>
+      </select>
+    </div>
+
+    <!-- Conditions d'utilisation -->
+    <div class="mb-4 flex items-center">
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="acceptedTerms" name="acceptedTerms" required
+          class="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out">
+        <span class="ml-2 text-gray-700 text-sm">
+          J'accepte les <a routerLink="/condition" class="text-blue-500 underline">conditions d'utilisation</a>
+        </span>
+      </label>
+    </div>
+
+    <!-- Bouton d'inscription -->
+    <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      S'inscrire
+    </button>
+
+    <!-- Lien vers la connexion -->
+    <div class="mt-6 text-center">
+      <p class="text-gray-600">Déjà un compte ? <a routerLink="/login" class="text-blue-500 hover:underline font-semibold">Connectez-vous ici</a>.</p>
+    </div>
+
+    <!-- Erreurs -->
+    <div *ngIf="registrationError" class="mt-4 text-red-500 text-center">
+      {{ registrationError }}
+    </div>
+  </form>
+</div>

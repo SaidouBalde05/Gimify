@@ -10,8 +10,7 @@ import * as bcrypt from 'bcryptjs';
 export class AuthService {
   private apiUrl = 'http://localhost:3000/users';
   private contactUrl = 'http://localhost:3000/contact';
-  private salesUrl = 'http://localhost:3000/sales'; // Ajoutez cette ligne pour les ventes
-  private _currentUser: any = null;
+  private salesUrl = 'http://localhost:3000/sales'; 
   private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   public currentUser: Observable<User | null> = this.currentUserSubject.asObservable();
 
@@ -21,7 +20,6 @@ export class AuthService {
       this.currentUserSubject.next(JSON.parse(userFromStorage));
     }
   }
-  // debut essaie
 
   sendPurchaseToSales(musicId: number, musicTitle: string): Observable<void> {
     const user = this.getCurrentUser();
@@ -46,23 +44,18 @@ export class AuthService {
     );
   }
 
-  // Ajoutez cette méthode à votre processus d'achat
   addPurchasedMusicAndSendToSales(musicId: number, musicTitle: string): Observable<any> {
     return this.addPurchasedMusic(musicId).pipe(
       map(() => {
-        // Une fois l'achat ajouté à l'utilisateur, envoyez-le à l'API de ventes
         return this.sendPurchaseToSales(musicId, musicTitle).subscribe();
       })
     );
   }
 
-  // fin essaie
-
   updateUser(user: User): Observable<User> {
     return this.http.put<User>(`http://localhost:3000/users/${user.id}`, user);
   }
   
-
   public getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
@@ -84,62 +77,65 @@ export class AuthService {
     return this.http.get<any[]>(this.contactUrl);
   }
 
-  login(username: string, password: string): Observable<boolean> {
-    return this.http.get<User[]>(`${this.apiUrl}?username=${username}`).pipe(
-        map(users => {
-            if (users.length > 0) {
-                const user = users[0];
-                // Comparer le mot de passe haché
-                if (bcrypt.compareSync(password, user.password)) {
-                    this.setCurrentUser(user);
-                    return true;
-                }
-            }
-            return false;
-        }),
-        catchError(() => {
-            return [false];
-        })
-    );
+login(username: string, password: string, phoneNumber: string): Observable<boolean> {
+  return this.http.get<User[]>(`${this.apiUrl}?username=${username}`).pipe(
+    map(users => {
+      if (users.length > 0) {
+        const user = users[0];
+        const isPasswordValid = bcrypt.compareSync(password, user.password);
+        const isPhoneNumberValid = phoneNumber ? bcrypt.compareSync(phoneNumber, user.phoneNumber) : true;
+
+        if (isPasswordValid && isPhoneNumberValid) {
+          this.setCurrentUser(user);
+          return true;
+        }
+      }
+      return false;
+    }),
+    catchError(() => {
+      return [false];
+    })
+  );
 }
+
 
 
   logout(): void {
     this.setCurrentUser(null);
-    this._currentUser = null;
   }
 
   isLoggedIn(): boolean {
     return this.currentUserSubject.value !== null;
   }
 
-  register( id: any, firstName: string, lastName: string, username: string, password: string, role: 'admin' | 'user'): Observable<void> {
+  register(id: any, firstName: string, lastName: string, username: string, password: string, role: 'admin' | 'user', phoneNumber: string): Observable<void> {
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
 
     const user: User = {
-        firstName,
-        lastName,
-        username,
-        password: hashedPassword,
-        role,
-        id,
-        purchasedMusicIds: [] // Ajoutez cette ligne pour initialiser la liste des albums achetés
+      firstName,
+      lastName,
+      username,
+      password: hashedPassword,
+      role,
+      id,
+      phoneNumber,
+      purchasedMusicIds: [],
     };
 
     console.log('Tentative d\'enregistrement de l\'utilisateur:', user);
 
     return this.http.post<void>(this.apiUrl, user).pipe(
-        map(response => {
-            console.log('Enregistrement réussi:', response);
-            return response;
-        }),
-        catchError((error) => {
-            console.error('Erreur lors de l\'enregistrement:', error);
-            throw new Error('Unable to register user');
-        })
+      map(response => {
+        console.log('Enregistrement réussi:', response);
+        return response;
+      }),
+      catchError((error) => {
+        console.error('Erreur lors de l\'enregistrement:', error);
+        throw new Error('Unable to register user');
+      })
     );
-}
+  }
 
 
   getUserPurchasedMusicIds(userId: number): Observable<number[]> {

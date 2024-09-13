@@ -1,20 +1,20 @@
 {
   "contact": [
     {
-      "id": "3aeb",
-      "name": "fvrvg",
-      "email": "rgtgz",
-      "message": "gzrze",
-      "date": "2024-09-11T14:42:18.599Z",
-      "isRead": false
-    },
-    {
       "id": "b904",
       "name": "htyhnyttt",
       "email": "baldeemamadousaidou20@gmail.com",
       "message": "syuzudfè-f\"-rdfè\"fgzefcefgocefc_à\"gfd\" 'rtècr\n\"'fry_ç'_f'\"à_f'\")t\nt('ezgvrtg\n(gtvre\nbeg\ngtrbdhrthyj-ytnjr",
       "date": "2024-09-11T15:17:55.074Z",
       "isRead": true
+    },
+    {
+      "id": "a277",
+      "name": "doss",
+      "email": ",op,p",
+      "message": " popo",
+      "date": "2024-09-13T15:55:00.014Z",
+      "isRead": false
     }
   ],
   "users": [
@@ -26,27 +26,6 @@
       "password": "$2a$10$ReGJvMDh4j3wKoxAzPcEkuQFfe2X6MUDfz7zYRBwVRFLI83U/w3pm",
       "role": "admin",
       "purchasedMusicIds": [
-        "54a44f75-d029-451c-8e79-a3cedb4a2bb3"
-      ]
-    },
-    {
-      "id": "6f82",
-      "firstName": "Mamadou saidou",
-      "lastName": "mamadou",
-      "username": "balde@gmail.com",
-      "password": "$2a$10$hmKNspxvSPe6UTDzIcq0L.orLzRqErFuedykrcRLAcct48/74dta6",
-      "role": "user",
-      "purchasedMusicIds": []
-    },
-    {
-      "id": "594c",
-      "firstName": "Mamadou saidou",
-      "lastName": "kakish",
-      "username": "dossmamadou@gmail.com",
-      "password": "$2a$10$/QyrasaCmqGLP1WtK.FEuOvlDoF6xKHLdRdCLapEBOUNCcLCCpQxW",
-      "role": "user",
-      "purchasedMusicIds": [
-        "518b8008-2131-48f2-85b3-1eef63e82972",
         "54a44f75-d029-451c-8e79-a3cedb4a2bb3"
       ]
     }
@@ -81,48 +60,19 @@
       "personalRevenue": 300000,
       "totalPersonalRevenue": 0,
       "releaseDate": "2024-09-10T19:26:06.580Z"
+    },
+    {
+      "id": "9b24e7e4-e48a-43c4-9f7a-44e6b7076180",
+      "title": "grr",
+      "description": "",
+      "imageUrl": "",
+      "audioFiles": [],
+      "artist": "pa",
+      "price": 9999,
+      "personalRevenue": 1232,
+      "totalPersonalRevenue": 0,
+      "releaseDate": "2024-09-13T17:44:42.472Z"
     }
   ],
-  "sales": [
-    {
-      "id": "ac33",
-      "musicId": "54a44f75-d029-451c-8e79-a3cedb4a2bb3",
-      "musicTitle": "essaie",
-      "userId": "59c7",
-      "userName": "Mamadou saidou Baldé",
-      "date": "2024-09-11T14:19:44.917Z"
-    },
-    {
-      "id": "f009",
-      "musicId": "54a44f75-d029-451c-8e79-a3cedb4a2bb3",
-      "musicTitle": "essaie",
-      "userId": "594c",
-      "userName": "Mamadou saidou kakish",
-      "date": "2024-09-11T14:27:19.262Z"
-    },
-    {
-      "id": "9311",
-      "musicId": "518b8008-2131-48f2-85b3-1eef63e82972",
-      "musicTitle": "33",
-      "userId": "59c7",
-      "userName": "Mamadou saidou Baldé",
-      "date": "2024-09-11T14:31:03.651Z"
-    },
-    {
-      "id": "ebb7",
-      "musicId": "518b8008-2131-48f2-85b3-1eef63e82972",
-      "musicTitle": "33",
-      "userId": "59c7",
-      "userName": "Mamadou saidou Baldé",
-      "date": "2024-09-11T15:56:05.127Z"
-    },
-    {
-      "id": "6d1d",
-      "musicId": "54a44f75-d029-451c-8e79-a3cedb4a2bb3",
-      "musicTitle": "essaie",
-      "userId": "59c7",
-      "userName": "Mamadou saidou Baldé",
-      "date": "2024-09-11T15:56:39.006Z"
-    }
-  ]
+  "sales": []
 }
