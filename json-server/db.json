@@ -14,7 +14,15 @@
       "email": ",op,p",
       "message": " popo",
       "date": "2024-09-13T15:55:00.014Z",
-      "isRead": false
+      "isRead": true
+    },
+    {
+      "id": "ed2d",
+      "name": "xrydètf_-fà_çyçuo",
+      "email": "KND3IO34FPI5N4",
+      "message": "mabo",
+      "date": "2024-09-16T15:19:23.011Z",
+      "isRead": true
     }
   ],
   "users": [
@@ -26,8 +34,38 @@
       "password": "$2a$10$ReGJvMDh4j3wKoxAzPcEkuQFfe2X6MUDfz7zYRBwVRFLI83U/w3pm",
       "role": "admin",
       "purchasedMusicIds": [
-        "54a44f75-d029-451c-8e79-a3cedb4a2bb3"
+        "54a44f75-d029-451c-8e79-a3cedb4a2bb3",
+        "9b24e7e4-e48a-43c4-9f7a-44e6b7076180"
       ]
+    },
+    {
+      "id": "6ef3",
+      "firstName": "cflekdnviocftrfv",
+      "lastName": "trvtr(\"",
+      "username": "balde@gmail.com",
+      "password": "$2a$10$pAbQP5BXDGMv4tN10nDSpuuqjbTv.jAH0QDAfVJuoOKCPmBiYksb2",
+      "phoneNumber": "12345",
+      "role": "user",
+      "purchasedMusicIds": []
+    },
+    {
+      "id": "4076",
+      "firstName": "tes",
+      "lastName": "bui",
+      "username": "SaidouBaldé",
+      "password": "$2a$10$RNufJ8RJWoyz2oDBuyeNkuRRcR7ucZcROPoWLFY1VHzpFVWivBBZi",
+      "phoneNumber": "1234333",
+      "role": "user",
+      "purchasedMusicIds": []
+    },
+    {
+      "id": "d07f",
+      "firstName": "",
+      "lastName": "",
+      "username": "",
+      "password": "$2a$10$6zYBUIx7p2WLRAl7GGF6EOJuWOsRQjWBhByokpsDarRGSy2yw6WBS",
+      "role": "user",
+      "purchasedMusicIds": []
     }
   ],
   "musics": [

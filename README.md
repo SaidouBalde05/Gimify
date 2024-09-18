@@ -1,4 +1,8 @@
-# Doss
+# Gimify
+c'est un site de vente de music .
+pour effectuer un achat dans le site tu dois avoir un compte.
+pour publier tu dois etre connecter en tant qu'administrateur.
+l'administrateur peut voir le nombre d'utilisateur,le nombre de ventes de chaque album.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.3.
 

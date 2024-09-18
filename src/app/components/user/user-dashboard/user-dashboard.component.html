@@ -14,7 +14,7 @@
 <div *ngIf="currentUser">
   <div class="flex items-center mb-4">
     <i 
-      class="fas fa-cogs text-gray-600 text-2xl cursor-pointer transition-transform duration-300"
+      class="fas fa-cogs text-blue-500 text-2xl cursor-pointer transition-transform duration-300"
       (click)="toggleUserInfo()"
       [ngClass]="{'rotate-180': showUserInfo}"
     ></i>
@@ -24,21 +24,21 @@
     <button 
       *ngIf="authService.isLoggedIn()" 
       (click)="logout()"
-      class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+      class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
     >
       Déconnexion
     </button>
 
     <p class="flex items-center">
-      <i class="fas fa-envelope text-gray-600 mr-2"></i>
+      <i class="fas fa-envelope text-blue-500 mr-2"></i>
       Adresse email : <strong>{{ currentUser.username }}</strong>
     </p>
     <p class="flex items-center">
-      <i class="fas fa-user text-gray-600 mr-2"></i>
+      <i class="fas fa-user text-blue-500 mr-2"></i>
       Prénom : <strong>{{ currentUser.firstName }}</strong>
     </p>
     <p class="flex items-center">
-      <i class="fas fa-user text-gray-600 mr-2"></i>
+      <i class="fas fa-user text-blue-500 mr-2"></i>
       Nom : <strong>{{ currentUser.lastName }}</strong>
     </p>
   </div>

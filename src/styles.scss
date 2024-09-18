@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-image: url('/assets/logoteste2.png');
+  background-image: url('/assets/teste.png');
   background-size: cover;          /* Ajuste l'image pour couvrir tout l'écran */
   background-position: center;     /* Centre l'image */
   background-repeat: no-repeat;    /* Empêche la répétition de l'image */
@@ -12,8 +12,8 @@ body {
   padding: 0;
   height: 100vh;                   /* Hauteur de la page égale à la taille de l'écran */
   object-fit: cover;
-  background-color: rgba(255, 255, 255, 0.2); /* Couleur blanche avec opacité */
-  background-blend-mode: lighten; /* Mélange la couleur et l'image pour éclaircir */
+  // background-color: rgba(255, 255, 255, 0.2); 
+  // background-blend-mode: lighten; 
 }
 .header{
   background-color: rgb(18, 16, 83);

@@ -20,7 +20,7 @@ export class UserDashboardComponent implements OnInit {
   currentUser: User | null = null;
   purchases: Music[] = [];
   showUserInfo: boolean = false;
-
+  
   fullText: string = '';
   animatedText: string = '';
   letterIndex: number = 0;

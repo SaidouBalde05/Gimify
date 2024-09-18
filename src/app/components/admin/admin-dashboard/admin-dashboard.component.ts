@@ -34,6 +34,10 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   messageUrl = 'http://localhost:3000/contact';
   chart: Chart | undefined;
 
+  fullText: string = '';
+  animatedText: string = '';
+  letterIndex: number = 0;
+
   constructor(
     private musicService: MusicService,
     private authService: AuthService,
@@ -46,6 +50,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       this.initializeAdminData();
     }
   }
+
 
   ngAfterViewInit(): void {
     this.createChart();
