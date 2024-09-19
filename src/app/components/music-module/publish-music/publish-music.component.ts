@@ -76,7 +76,7 @@ export class PublishMusicComponent {
       console.error('Erreur lors de l\'ajout de la publication', error);
     });
   }
-
+  
   resetForm(): void {
     this.newMusic = {
       title: '',
@@ -87,6 +87,12 @@ export class PublishMusicComponent {
       price: 0 ,// Réinitialisation du prix
       personalRevenue: 0
     };
+  }
+
+   // Pour écouter un fichier audio (dans Ionic)
+   playAudio(audioUrl: string): void {
+    const audio = new Audio(audioUrl);
+    audio.play().catch(error => console.error('Erreur lors de la lecture', error));
   }
 
   reloadMusicList(): void {

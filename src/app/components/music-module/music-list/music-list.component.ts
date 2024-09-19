@@ -97,8 +97,6 @@ export class MusicListComponent implements OnInit {
         }
       );
     } else {
-      // alert('Utilisateur non connecté.');
-      // alert("Pour finaliser votre achat, veuillez créer un compte. Vous bénéficierez ainsi d'offres exclusives et d'un espace personnalisé.");
       alert("Attention : la création d'un compte est nécessaire pour enregistrer votre achat. Sans compte, votre panier sera vidé à la fermeture de cette fenêtre. Créez votre compte maintenant et revenez finaliser votre achat.Vous bénéficierez ainsi d'un espace personnalisé.");
       window.location.href = "/register";
       this.isProcessingPurchase = false;

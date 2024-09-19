@@ -1,9 +1,7 @@
-// music.service.ts
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, map, Observable, switchMap } from 'rxjs';
 import { Music } from '../models/music.model';
-
 export interface Sale {
   id: number; 
   musicId: string | null;
@@ -19,11 +17,10 @@ export interface Sale {
 export class MusicService {
   private apiUrl = 'http://localhost:3000/musics'; 
   private salesUrl = 'http://localhost:3000/sales'; 
+    private audioBaseUrl = 'http://localhost:3000/audio-files'
 
-  constructor(private http: HttpClient) {
-
-  }
-
+  constructor(private http: HttpClient) {}
+  
    // Méthode pour réinitialiser toutes les ventes
    resetSales(): Observable<void> {
     return this.getSales().pipe(
@@ -245,4 +242,10 @@ getArtistRevenue(artistName: string): Observable<number> {
       map(musics => musics.reduce((acc, music) => acc + (music.personalRevenue || 0), 0))
     );
   }
+  // Méthode pour écouter un fichier audio (directement via un lecteur natif ou via un plugin Ionic)
+  playAudio(fileUrl: string): void {
+    const audio = new Audio(fileUrl);
+    audio.play().catch(error => console.error('Erreur lors de la lecture de l\'audio:', error));
+  }
 }
+
